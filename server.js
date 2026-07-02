@@ -17,17 +17,23 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Ensure directories exist
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
-const CACHE_DIR = path.join(__dirname, 'cache');
-const DATA_DIR = path.join(__dirname, 'data');
+// Determine base directory for writable paths (use /tmp in serverless environments)
+const isServerless = process.env.VERCEL || process.env.NOW_BUILD_TRIGGER;
+const baseWritableDir = isServerless ? '/tmp' : __dirname;
+
+const UPLOADS_DIR = path.join(baseWritableDir, 'uploads');
+const CACHE_DIR = path.join(baseWritableDir, 'cache');
+const DATA_DIR = path.join(baseWritableDir, 'data');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
-[UPLOADS_DIR, CACHE_DIR, DATA_DIR, PUBLIC_DIR].forEach(dir => {
+[UPLOADS_DIR, CACHE_DIR, DATA_DIR].forEach(dir => {
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }
 });
+if (!fs.existsSync(PUBLIC_DIR)) {
+    fs.mkdirSync(PUBLIC_DIR, { recursive: true });
+}
 
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
