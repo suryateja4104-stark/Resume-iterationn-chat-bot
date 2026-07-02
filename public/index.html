@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+    <title>Nova AI Assistant</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Theme Configuration -->
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#993100",
+                    "surface-container-low": "#f2f4f6",
+                    "tertiary-container": "#c24100",
+                    "background": "#f7f9fb",
+                    "secondary-container": "#d0e1fb",
+                    "on-tertiary-fixed": "#380d00",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#124af0",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed-variant": "#0035be",
+                    "surface-dim": "#d8dadc",
+                    "on-secondary-fixed": "#0b1c30",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed-dim": "#b8c3ff",
+                    "primary-fixed": "#dde1ff",
+                    "secondary": "#505f76",
+                    "on-error-container": "#93000a",
+                    "surface-container": "#eceef0",
+                    "on-primary-fixed": "#001356",
+                    "inverse-primary": "#b8c3ff",
+                    "surface": "#f7f9fb",
+                    "primary-container": "#2e5bff",
+                    "on-secondary-container": "#54647a",
+                    "surface-variant": "#e0e3e5",
+                    "on-surface": "#191c1e",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "primary": "#0040e0",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#c4c5d9",
+                    "inverse-surface": "#2d3133",
+                    "tertiary-fixed": "#ffdbcf",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#efefff",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-tertiary-container": "#ffece6",
+                    "surface-bright": "#f7f9fb",
+                    "on-background": "#191c1e",
+                    "outline": "#747688",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-high": "#e6e8ea",
+                    "on-surface-variant": "#434656"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "0.25rem",
+                    "sm": "0.5rem",
+                    "md": "1rem",
+                    "lg": "1.5rem",
+                    "gutter": "1rem",
+                    "xl": "2rem",
+                    "margin-mobile": "1.25rem"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-md": ["15px", {"lineHeight": "22px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .chat-scroll-area::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-scroll-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-scroll-area::-webkit-scrollbar-thumb {
+            background: #e0e3e5;
+            border-radius: 10px;
+        }
+        .ai-bubble {
+            background-color: #F1F5F9;
+            color: #191c1e;
+            border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+        }
+        .user-bubble {
+            background-color: #0040e0;
+            color: #ffffff;
+            border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .floating-anim {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- Top Unified App Bar (Hidden on Welcome Screen) -->
+    <header id="app-header" class="hidden bg-surface border-b border-outline-variant shadow-sm flex justify-between items-center px-margin-mobile h-16 w-full fixed top-0 z-50">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-2xl" data-icon="smart_toy">smart_toy</span>
+            <h1 class="text-headline-md font-headline-md font-bold text-primary">AI Assistant</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <!-- Header Avatar: Clicking it navigates to Profile -->
+            <button onclick="switchTab('profile')" class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant flex items-center justify-center hover:scale-105 active:scale-95 transition-transform">
+                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfdFR923mDFFRYxoYlSv8dLWoK4VJ77L_kF8MBgLnwEPjEyQ3CQg0injsL2UmFcVE63H3BgEbDlSPEPxLqWQKkFbI3uj_AtIv1dUB2mn8uZFVVMoPBQ_Joxc6KL8JNUfKdmBDs0ebL8zBnrv-A3crQ7yn4eAXN3ApLAS9HuweiEdaEjmKtUQcfHGCDgD77c4T1BOGiyK1AGKDR1BIZOyfvRXGsTBpDwQZDhmuMNpw40vln6ePerkvUaKLBWpy5rPeSeRY0y8EaXhc" alt="User profile avatar"/>
+            </button>
+        </div>
+    </header>
+
+    <!-- API Key Alert Banner -->
+    <div id="api-key-banner" class="hidden fixed top-16 left-0 right-0 bg-yellow-100 border-b border-yellow-300 text-yellow-800 px-4 py-2 text-center text-label-sm z-40 flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-yellow-600">warning</span>
+        <span>Gemini API Key is not configured. Please go to the <strong>Profile</strong> tab to add your key.</span>
+    </div>
+
+    <!-- MAIN VIEWS CONTAINER -->
+    <main class="flex-grow flex flex-col">
+
+        <!-- 1. WELCOME VIEW -->
+        <section id="welcome-view" class="flex-grow pt-16 flex flex-col items-center justify-center px-margin-mobile overflow-hidden">
+            <!-- Header for Welcome View specifically -->
+            <header class="bg-surface border-b border-outline-variant shadow-sm flex justify-between items-center px-margin-mobile h-16 w-full absolute top-0 left-0 z-50">
+                <div class="flex items-center gap-md">
+                    <span class="material-symbols-outlined text-primary text-headline-md" data-icon="smart_toy">smart_toy</span>
+                    <h1 class="text-headline-md font-headline-md font-bold text-primary">AI Assistant</h1>
+                </div>
+                <div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center border border-outline-variant">
+                    <span class="material-symbols-outlined text-outline" data-icon="person">person</span>
+                </div>
+            </header>
+
+            <!-- Illustration Section -->
+            <div class="relative w-full max-w-sm mb-lg flex justify-center items-center mt-8">
+                <!-- Background Decorative Blobs -->
+                <div class="absolute -top-10 -left-10 w-48 h-48 bg-secondary-container opacity-40 blur-3xl rounded-full"></div>
+                <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-primary-fixed opacity-40 blur-3xl rounded-full"></div>
+                <!-- Hero Illustration -->
+                <div class="relative z-10 floating-anim">
+                    <img class="w-64 h-64 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMUYlAjdJnHrlEjSFVGiW1lnSzjfmI317JFpqv_XSl52lGvSh2Q0VAPCN1o5NkpAD1rJUAyCuyEwDI0v4eq2ZYBX5RUF4fW43z1_5FuE340QSKY1hQe1-zrRNTHqBuUPC3NVkEZ2cap4NFKDJUhIx1VFTQqKH7I_pnVYP48l94Ay4OXXZEqohtGHa9-iczDEotCB8I-UyrcBrXlFUBaPlEkK0NOj_dCoIOTpZv7qA1l6mD4FaYhOrH7b4y3rmFAZmC9svflXyfRvo" alt="Hero Character Illustration"/>
+                </div>
+            </div>
+
+            <!-- Content Block -->
+            <div class="w-full max-w-lg text-center space-y-md">
+                <h2 class="text-headline-lg font-headline-lg text-on-surface">Your Smartest Companion, Always Online</h2>
+                <p class="text-body-lg font-body-lg text-on-surface-variant leading-relaxed">
+                    Experience the next generation of efficient empathy. Query your knowledge repository of text, Word, Excel, or PowerPoint files instantly.
+                </p>
+            </div>
+
+            <!-- Bento Highlights (Subtle) -->
+            <div class="w-full max-w-md mt-xl grid grid-cols-2 gap-sm">
+                <div class="bg-surface-container-low p-md rounded-xl flex flex-col gap-xs transition-colors hover:bg-surface-container">
+                    <span class="material-symbols-outlined text-primary" data-icon="auto_awesome">auto_awesome</span>
+                    <p class="text-label-md font-label-md text-on-surface">Creative Synthesis</p>
+                    <p class="text-label-sm font-label-sm text-on-surface-variant">Extract text, excel &amp; ppt</p>
+                </div>
+                <div class="bg-surface-container-low p-md rounded-xl flex flex-col gap-xs transition-colors hover:bg-surface-container">
+                    <span class="material-symbols-outlined text-tertiary" data-icon="speed">speed</span>
+                    <p class="text-label-md font-label-md text-on-surface">Precision RAG</p>
+                    <p class="text-label-sm font-label-sm text-on-surface-variant">Instant document Q&amp;A</p>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="w-full max-w-md mt-xl flex flex-col gap-md pb-xl">
+                <button class="w-full bg-primary-container text-white py-4 rounded-full font-label-md text-headline-md flex justify-center items-center gap-sm shadow-sm hover:brightness-110 active:scale-[0.98] transition-all" onclick="handleStart()">
+                    Get Started
+                    <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+                </button>
+                <p class="text-label-sm font-label-sm text-outline text-center">
+                    Secure local file parsing &bull; Gemini-powered answers
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. CHAT VIEW -->
+        <section id="chat-view" class="hidden flex-1 flex flex-col h-[calc(100vh-4rem)] pt-16 pb-40 px-margin-mobile overflow-y-auto chat-scroll-area bg-background">
+            <div class="max-w-3xl mx-auto w-full flex flex-col space-y-4 py-8" id="chat-messages-container">
+                <!-- Messages will be dynamically rendered here -->
+            </div>
+
+            <!-- Bottom Controls Area inside Chat (Absolute/Fixed relative to screen) -->
+            <div class="fixed bottom-16 left-0 right-0 z-40 bg-surface-container-lowest/80 backdrop-blur-md pb-4 border-t border-outline-variant/30">
+                
+                <!-- Quick Reply Chips -->
+                <div class="flex overflow-x-auto gap-2 px-margin-mobile py-3 no-scrollbar max-w-3xl mx-auto" id="quick-replies-container">
+                    <button onclick="sendQuickReply('Summarize my uploaded files')" class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant bg-surface text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                        Summarize my documents
+                    </button>
+                    <button onclick="sendQuickReply('What documents are available?')" class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant bg-surface text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                        What documents are available?
+                    </button>
+                    <button onclick="sendQuickReply('Search for contact information')" class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant bg-surface text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                        Search for contact details
+                    </button>
+                </div>
+
+                <!-- Input Bar -->
+                <div class="px-margin-mobile pb-2">
+                    <div class="bg-surface rounded-full border border-outline-variant shadow-sm flex items-center p-1 pl-4 h-14 max-w-3xl mx-auto focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+                        
+                        <!-- Attachment + Button -->
+                        <button onclick="triggerFilePicker()" title="Upload file to Knowledge Base" class="p-2 text-outline hover:text-primary transition-colors flex items-center justify-center">
+                            <span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                        </button>
+                        <input type="file" id="chat-file-picker" multiple class="hidden" onchange="handleFileChange(event)"/>
+
+                        <!-- Text Input -->
+                        <input id="chat-input" class="flex-1 bg-transparent border-none focus:ring-0 text-body-md px-2 placeholder-outline" placeholder="Type a message..." type="text" onkeydown="handleKeyDown(event)"/>
+                        
+                        <!-- Send Button -->
+                        <button onclick="sendMessage()" class="bg-primary text-white p-2.5 rounded-full flex items-center justify-center hover:bg-primary-container transition-colors ml-1 active:scale-95 duration-150">
+                            <span class="material-symbols-outlined" data-icon="send">send</span>
+                        </button>
+                    </div>
+                    <!-- Uploading status indicator -->
+                    <div id="upload-status" class="hidden text-xs text-primary text-center mt-1 font-label-sm animate-pulse">
+                        Uploading and parsing file...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. HISTORY VIEW -->
+        <section id="history-view" class="hidden flex-1 pt-16 pb-24 px-margin-mobile max-w-2xl mx-auto w-full overflow-y-auto">
+            <!-- Search Area -->
+            <div class="mt-lg mb-lg bg-background pt-4 sticky top-0 z-10 border-b border-outline-variant/30 pb-3">
+                <div class="relative group">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+                    <input id="history-search-input" class="w-full h-12 pl-12 pr-4 bg-surface-container-lowest border border-outline-variant rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-body-md font-body-md shadow-sm" placeholder="Search conversations..." type="text" oninput="filterHistory()"/>
+                </div>
+            </div>
+
+            <!-- Conversation List -->
+            <div class="space-y-md" id="history-list-container">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="hidden flex-col items-center justify-center py-20 text-center" id="empty-state">
+                <div class="w-32 h-32 mb-6">
+                    <span class="material-symbols-outlined text-outline/40" style="font-size: 80px;">search_off</span>
+                </div>
+                <h3 class="text-headline-md font-headline-md text-on-surface-variant mb-2">No conversations found</h3>
+                <p class="text-body-md font-body-md text-outline">Start a new chat or adjust your filters.</p>
+            </div>
+        </section>
+
+        <!-- 4. PROFILE VIEW -->
+        <section id="profile-view" class="hidden flex-1 mt-16 mb-24 px-margin-mobile py-lg max-w-2xl mx-auto w-full overflow-y-auto">
+            <!-- Profile Hero Section -->
+            <section class="flex flex-col items-center text-center mb-xl">
+                <div class="relative mb-md">
+                    <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-primary to-primary-container p-1 shadow-lg shadow-primary/20">
+                        <div class="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+                            <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdJgEPoWdjZFj4F702UY1xyKjcnjd1-kBAGKNizzyaUlU3ZtC_wDrS1vwZaZ7QSVc1eX-FvTZJbys8KxrnYYuw9N1wBBL_czMCcWpgF9yFxjlRkJtpSTNTNlPBUqHmvz91svT-Jul4FHzXF93E0UG6w4F0TNsG5JIMeqgzbN67vDkVtQjqN1S1Bq1lFgYyQX4hFMtZJDMIK3_HFLj2Q5DS46yNIM8Z6_DhA0pU3XK-7Ok3fFs_STZndil83BhFsaMA7cIg1I0gksI" alt="Nova avatar"/>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-1 right-1 w-6 h-6 bg-green-500 border-4 border-white rounded-full"></div>
+                </div>
+                <h2 class="text-headline-lg font-headline-lg text-on-surface mb-xs">Nova v4.2</h2>
+                <p class="text-body-md font-body-md text-secondary max-w-xs leading-relaxed">
+                    Empathetic intelligence designed to answer questions from your text, Word, Excel, and PowerPoint files.
+                </p>
+            </section>
+
+            <!-- Gemini API Key Configuration -->
+            <section class="mb-xl bg-surface-container-lowest border border-outline-variant p-md rounded-xl space-y-3 shadow-sm">
+                <div class="flex items-center gap-md">
+                    <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+                        <span class="material-symbols-outlined">key</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-label-md font-label-md text-on-surface">Gemini API Key</p>
+                        <p class="text-label-sm font-label-sm text-secondary" id="api-key-status">Not Configured</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <input type="password" id="api-key-input" class="flex-1 px-3 py-2 border border-outline-variant rounded-lg text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-background" placeholder="Enter GEMINI_API_KEY..." />
+                    <button onclick="saveApiKey()" class="bg-primary text-white px-5 py-2 rounded-lg text-label-md font-semibold hover:brightness-110 active:scale-95 transition-all">Save</button>
+                </div>
+            </section>
+
+            <!-- Document Knowledge Repository Section -->
+            <section class="mb-xl bg-surface-container-lowest border border-outline-variant p-md rounded-xl shadow-sm space-y-4">
+                <div class="flex justify-between items-center pb-2 border-b border-outline-variant/30">
+                    <div class="flex items-center gap-md">
+                        <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+                            <span class="material-symbols-outlined">folder</span>
+                        </div>
+                        <div>
+                            <p class="text-label-md font-label-md text-on-surface">Knowledge Repository</p>
+                            <p class="text-label-sm font-label-sm text-secondary" id="repository-stats">0 files uploaded</p>
+                        </div>
+                    </div>
+                    <!-- Upload Button -->
+                    <button onclick="triggerProfileFilePicker()" class="flex items-center gap-1 bg-primary text-white px-4 py-2 rounded-full text-label-sm font-semibold hover:brightness-110 active:scale-95 transition-all">
+                        <span class="material-symbols-outlined text-sm">upload</span>
+                        Upload
+                    </button>
+                    <input type="file" id="profile-file-picker" multiple class="hidden" onchange="handleProfileFileChange(event)"/>
+                </div>
+
+                <!-- Document List -->
+                <div id="document-list-container" class="space-y-2 max-h-60 overflow-y-auto chat-scroll-area">
+                    <!-- Dynamically populated files list -->
+                    <div class="text-center py-6 text-label-sm text-outline">
+                        No files in the knowledge repository. Upload files (.txt, .docx, .xlsx, .pptx, .csv) to begin.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Capabilities Bento Grid -->
+            <section class="mb-xl">
+                <h3 class="text-label-md font-label-md text-secondary uppercase tracking-wider mb-md">Core Capabilities</h3>
+                <div class="grid grid-cols-2 gap-md">
+                    <div class="glass-card p-md rounded-xl flex flex-col gap-sm">
+                        <span class="material-symbols-outlined text-primary" data-icon="auto_awesome">auto_awesome</span>
+                        <span class="text-label-md font-label-md text-on-surface">Creative Synthesis</span>
+                    </div>
+                    <div class="glass-card p-md rounded-xl flex flex-col gap-sm">
+                        <span class="material-symbols-outlined text-primary" data-icon="data_exploration">data_exploration</span>
+                        <span class="text-label-md font-label-md text-on-surface">Data Insight</span>
+                    </div>
+                    <div class="glass-card p-md rounded-xl flex flex-col gap-sm">
+                        <span class="material-symbols-outlined text-primary" data-icon="translate">translate</span>
+                        <span class="text-label-md font-label-md text-on-surface">Global Fluency</span>
+                    </div>
+                    <div class="glass-card p-md rounded-xl flex flex-col gap-sm">
+                        <span class="material-symbols-outlined text-primary" data-icon="terminal">terminal</span>
+                        <span class="text-label-md font-label-md text-on-surface">Technical Support</span>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar (Hidden on Welcome View) -->
+    <nav id="bottom-nav" class="hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center pt-2 pb-safe px-gutter bg-surface-container-lowest border-t border-outline-variant shadow-lg rounded-t-xl h-20">
+        <!-- Chat Tab -->
+        <button id="nav-chat-btn" onclick="switchTab('chat')" class="flex flex-col items-center justify-center px-6 py-2 transition-transform duration-150 active:scale-90 rounded-full">
+            <span class="material-symbols-outlined mb-0.5">chat</span>
+            <span class="text-label-sm font-label-sm">Chat</span>
+        </button>
+        <!-- History Tab -->
+        <button id="nav-history-btn" onclick="switchTab('history')" class="flex flex-col items-center justify-center px-6 py-2 transition-transform duration-150 active:scale-90 rounded-full text-on-surface-variant">
+            <span class="material-symbols-outlined mb-0.5">history</span>
+            <span class="text-label-sm font-label-sm">History</span>
+        </button>
+        <!-- Profile Tab -->
+        <button id="nav-profile-btn" onclick="switchTab('profile')" class="flex flex-col items-center justify-center px-6 py-2 transition-transform duration-150 active:scale-90 rounded-full text-on-surface-variant">
+            <span class="material-symbols-outlined mb-0.5">person</span>
+            <span class="text-label-sm font-label-sm">Profile</span>
+        </button>
+    </nav>
+
+    <!-- New Chat Floating Action Button (Only visible on History view) -->
+    <button id="new-chat-fab" onclick="startNewChat()" class="hidden fixed right-6 bottom-24 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-40">
+        <span class="material-symbols-outlined" style="font-size: 32px;">add</span>
+    </button>
+
+    <!-- Client-side Logic Script -->
+    <script src="/app.js"></script>
+</body>
+</html>

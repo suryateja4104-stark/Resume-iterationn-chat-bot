@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>AI Assistant Profile</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#993100",
+                    "surface-container-low": "#f2f4f6",
+                    "tertiary-container": "#c24100",
+                    "background": "#f7f9fb",
+                    "secondary-container": "#d0e1fb",
+                    "on-tertiary-fixed": "#380d00",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#124af0",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed-variant": "#0035be",
+                    "surface-dim": "#d8dadc",
+                    "on-secondary-fixed": "#0b1c30",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed-dim": "#b8c3ff",
+                    "primary-fixed": "#dde1ff",
+                    "secondary": "#505f76",
+                    "on-error-container": "#93000a",
+                    "surface-container": "#eceef0",
+                    "on-primary-fixed": "#001356",
+                    "inverse-primary": "#b8c3ff",
+                    "surface": "#f7f9fb",
+                    "primary-container": "#2e5bff",
+                    "on-secondary-container": "#54647a",
+                    "surface-variant": "#e0e3e5",
+                    "on-surface": "#191c1e",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "primary": "#0040e0",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#c4c5d9",
+                    "inverse-surface": "#2d3133",
+                    "tertiary-fixed": "#ffdbcf",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#efefff",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-tertiary-container": "#ffece6",
+                    "surface-bright": "#f7f9fb",
+                    "on-background": "#191c1e",
+                    "outline": "#747688",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-high": "#e6e8ea",
+                    "on-surface-variant": "#434656"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "0.25rem",
+                    "sm": "0.5rem",
+                    "md": "1rem",
+                    "lg": "1.5rem",
+                    "gutter": "1rem",
+                    "xl": "2rem",
+                    "margin-mobile": "1.25rem"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-md": ["15px", {"lineHeight": "22px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface border-b border-outline-variant shadow-sm flex justify-between items-center px-margin-mobile h-16 w-full fixed top-0 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="smart_toy">smart_toy</span>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">AI Assistant</h1>
+</div>
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border border-primary/10">
+<img class="w-full h-full object-cover" data-alt="A minimalist professional profile portrait of a modern office worker, softly lit with cool blue and white studio lighting to match a clean corporate aesthetic. High-end photography style with shallow depth of field, set against a pristine light gray background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDy9xSG0Wr8dgp7mO2pVq6KB5rIz7P5fsNuCirOJRpmr7YWo4XVTfYh5ikbBtFQpBzmzgQFtEFFh6mVcUo-jmrzcsw0hcj5RtnQLGtDO1n0exA9O66hH8DAhJf0wGc9lgMxPQP4kv1VUqAjqa9XZExLpLy5jbI3htLLZot3sJTPYF9sDO8qq_51DQAOycFCkimlQa0azO3ikofS0gu2Z21mSWjJ8gazSZn3DOqyr4R6LDdNpk3pe_TuJ7RdtHrKJ6rt05_ht1vNUyw"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 mt-16 mb-20 px-margin-mobile py-lg max-w-2xl mx-auto w-full">
+<!-- Profile Hero Section -->
+<section class="flex flex-col items-center text-center mb-xl">
+<div class="relative mb-md">
+<div class="w-24 h-24 rounded-full bg-gradient-to-tr from-primary to-primary-container p-1 shadow-lg shadow-primary/20">
+<div class="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A high-tech digital avatar of a friendly AI assistant, featuring glowing blue circuits and soft translucent textures. The style is ultra-modern, minimalist, and clean, with a bright white background that emphasizes efficient empathy and precision. Lighting is soft and volumetric." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdJgEPoWdjZFj4F702UY1xyKjcnjd1-kBAGKNizzyaUlU3ZtC_wDrS1vwZaZ7QSVc1eX-FvTZJbys8KxrnYYuw9N1wBBL_czMCcWpgF9yFxjlRkJtpSTNTNlPBUqHmvz91svT-Jul4FHzXF93E0UG6w4F0TNsG5JIMeqgzbN67vDkVtQjqN1S1Bq1lFgYyQX4hFMtZJDMIK3_HFLj2Q5DS46yNIM8Z6_DhA0pU3XK-7Ok3fFs_STZndil83BhFsaMA7cIg1I0gksI"/>
+</div>
+</div>
+<div class="absolute bottom-1 right-1 w-6 h-6 bg-green-500 border-4 border-white rounded-full"></div>
+</div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface mb-xs">Nova v4.2</h2>
+<p class="text-body-md font-body-md text-secondary max-w-xs leading-relaxed">
+                Empathetic intelligence designed to streamline your daily workflow with precision and clarity.
+            </p>
+</section>
+<!-- Capabilities Bento Grid -->
+<section class="mb-xl">
+<h3 class="text-label-md font-label-md text-secondary uppercase tracking-wider mb-md">Core Capabilities</h3>
+<div class="grid grid-cols-2 gap-md">
+<div class="glass-card p-md rounded-xl flex flex-col gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="auto_awesome">auto_awesome</span>
+<span class="text-label-md font-label-md text-on-surface">Creative Synthesis</span>
+</div>
+<div class="glass-card p-md rounded-xl flex flex-col gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="data_exploration">data_exploration</span>
+<span class="text-label-md font-label-md text-on-surface">Data Insight</span>
+</div>
+<div class="glass-card p-md rounded-xl flex flex-col gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="translate">translate</span>
+<span class="text-label-md font-label-md text-on-surface">Global Fluency</span>
+</div>
+<div class="glass-card p-md rounded-xl flex flex-col gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="terminal">terminal</span>
+<span class="text-label-md font-label-md text-on-surface">Technical Support</span>
+</div>
+</div>
+</section>
+<!-- Voice & Preferences List -->
+<section class="space-y-md mb-xl">
+<h3 class="text-label-md font-label-md text-secondary uppercase tracking-wider mb-sm">Preferences</h3>
+<!-- Voice Selector -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center justify-between transition-all hover:bg-surface-container-low group">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="record_voice_over">record_voice_over</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-on-surface">Voice Persona</p>
+<p class="text-label-sm font-label-sm text-secondary">Serene (Natural British)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Notifications Toggle -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-on-surface">Push Notifications</p>
+<p class="text-label-sm font-label-sm text-secondary">Active for priority tasks</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full peer-checked:bg-primary transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+</label>
+</div>
+<!-- Memory Toggle -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="memory">memory</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-on-surface">Long-term Memory</p>
+<p class="text-label-sm font-label-sm text-secondary">Enhances personalization</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full peer-checked:bg-primary transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+</label>
+</div>
+</section>
+<!-- Stats Card -->
+<section class="glass-card p-lg rounded-2xl flex justify-around items-center border border-primary/10 mb-xl shadow-sm">
+<div class="text-center">
+<p class="text-headline-md font-headline-md text-primary">1.2k</p>
+<p class="text-label-sm font-label-sm text-secondary">Tasks Done</p>
+</div>
+<div class="w-[1px] h-10 bg-outline-variant"></div>
+<div class="text-center">
+<p class="text-headline-md font-headline-md text-primary">99%</p>
+<p class="text-label-sm font-label-sm text-secondary">Accuracy</p>
+</div>
+<div class="w-[1px] h-10 bg-outline-variant"></div>
+<div class="text-center">
+<p class="text-headline-md font-headline-md text-primary">24ms</p>
+<p class="text-label-sm font-label-sm text-secondary">Latency</p>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center pt-2 pb-safe px-gutter bg-surface-container-lowest border-t border-outline-variant shadow-lg rounded-t-xl h-20">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high transition-transform duration-150 scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="text-label-sm font-label-sm">Chat</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high transition-transform duration-150 scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="text-label-sm font-label-sm">History</span>
+</button>
+<!-- ACTIVE TAB: Profile -->
+<button class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 transition-transform duration-150 scale-95 active:scale-90">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions for buttons
+        document.querySelectorAll('button, .glass-card').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.98)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = 'scale(1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'scale(1)';
+            });
+        });
+
+        // Simple scroll reveal for cards
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-700', 'ease-out', 'opacity-0', 'translate-y-4');
+            observer.observe(section);
+        });
+    </script>
+</body></html>

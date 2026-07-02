@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>AI Assistant - Chat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#993100",
+                    "surface-container-low": "#f2f4f6",
+                    "tertiary-container": "#c24100",
+                    "background": "#f7f9fb",
+                    "secondary-container": "#d0e1fb",
+                    "on-tertiary-fixed": "#380d00",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#124af0",
+                    "on-tertiary-fixed-variant": "#812800",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed-variant": "#0035be",
+                    "surface-dim": "#d8dadc",
+                    "on-secondary-fixed": "#0b1c30",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed-dim": "#b8c3ff",
+                    "primary-fixed": "#dde1ff",
+                    "secondary": "#505f76",
+                    "on-error-container": "#93000a",
+                    "surface-container": "#eceef0",
+                    "on-primary-fixed": "#001356",
+                    "inverse-primary": "#b8c3ff",
+                    "surface": "#f7f9fb",
+                    "primary-container": "#2e5bff",
+                    "on-secondary-container": "#54647a",
+                    "surface-variant": "#e0e3e5",
+                    "on-surface": "#191c1e",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "primary": "#0040e0",
+                    "tertiary-fixed-dim": "#ffb59b",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#c4c5d9",
+                    "inverse-surface": "#2d3133",
+                    "tertiary-fixed": "#ffdbcf",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#efefff",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-tertiary-container": "#ffece6",
+                    "surface-bright": "#f7f9fb",
+                    "on-background": "#191c1e",
+                    "outline": "#747688",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-high": "#e6e8ea",
+                    "on-surface-variant": "#434656"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "0.25rem",
+                    "sm": "0.5rem",
+                    "md": "1rem",
+                    "lg": "1.5rem",
+                    "gutter": "1rem",
+                    "xl": "2rem",
+                    "margin-mobile": "1.25rem"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-md": ["15px", {"lineHeight": "22px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .chat-scroll-area::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-scroll-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-scroll-area::-webkit-scrollbar-thumb {
+            background: #e0e3e5;
+            border-radius: 10px;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .ai-bubble {
+            background-color: #F1F5F9;
+            color: #191c1e;
+            border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+        }
+        .user-bubble {
+            background-color: #0040e0;
+            color: #ffffff;
+            border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col h-screen overflow-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface border-b border-outline-variant shadow-sm flex justify-between items-center px-margin-mobile h-16 w-full fixed top-0 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="smart_toy">smart_toy</span>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">AI Assistant</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist studio portrait of a professional woman with a friendly expression. The lighting is bright and even, against a soft gray background that reflects a modern corporate aesthetic. The overall mood is approachable and intelligent, consistent with a high-end tech assistant interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfdFR923mDFFRYxoYlSv8dLWoK4VJ77L_kF8MBgLnwEPjEyQ3CQg0injsL2UmFcVE63H3BgEbDlSPEPxLqWQKkFbI3uj_AtIv1dUB2mn8uZFVVMoPBQ_Joxc6KL8JNUfKdmBDs0ebL8zBnrv-A3crQ7yn4eAXN3ApLAS9HuweiEdaEjmKtUQcfHGCDgD77c4T1BOGiyK1AGKDR1BIZOyfvRXGsTBpDwQZDhmuMNpw40vln6ePerkvUaKLBWpy5rPeSeRY0y8EaXhc"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto pt-16 pb-40 px-margin-mobile chat-scroll-area bg-background">
+<div class="max-w-3xl mx-auto flex flex-col space-y-4 py-8">
+<!-- AI Message -->
+<div class="flex flex-col items-start gap-1">
+<div class="ai-bubble px-md py-sm max-w-[85%] text-body-md shadow-sm">
+                    Hello! I'm your AI Assistant. How can I help you today?
+                </div>
+<span class="text-label-sm text-outline px-2">10:02 AM</span>
+</div>
+<!-- User Message -->
+<div class="flex flex-col items-end gap-1">
+<div class="user-bubble px-md py-sm max-w-[85%] text-body-md shadow-sm">
+                    Can you help me plan a weekend trip to the mountains?
+                </div>
+<span class="text-label-sm text-outline px-2">10:05 AM</span>
+</div>
+<!-- AI Message -->
+<div class="flex flex-col items-start gap-1">
+<div class="ai-bubble px-md py-sm max-w-[85%] text-body-md shadow-sm">
+                    I'd love to! Which mountain range are you considering, or should I suggest some based on your location?
+                </div>
+<span class="text-label-sm text-outline px-2">10:05 AM</span>
+</div>
+<!-- AI Response Component (Bento-style visualization) -->
+<div class="flex flex-col items-start gap-3 w-full">
+<div class="ai-bubble p-4 w-full max-w-[90%] shadow-sm overflow-hidden">
+<p class="text-body-md mb-4">Here are three popular choices within 3 hours of you:</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<div class="bg-surface p-3 rounded-xl border border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<div class="h-24 w-full rounded-lg mb-2 overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A breathtaking landscape of majestic Blue Ridge Mountains at sunrise. Layers of soft blue and purple peaks fade into a misty horizon under a warm, glowing sky. Minimalist and clean composition that feels serene and inviting, suitable for a travel recommendation card." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATxtUGGFgCcf34bpoOv6_9q9cLtW9mslsMNM3yxw4ZreBbPOX6Z-5FvLNhzebmQVeVP52xe4z6rVGrIS_SVS38g43Ua66MUuucMTS0fJXE7y_r7IJgJVYQ3RPw5nUeSBgO1X_puhOxoyxM5J-McLmqssG6v-dgVPx0U_QrqVfB32YFEdm_LpVasmFHdCFdVY9RynnYSRjkvoYkr1ylKilPR-UoLQAdfXElAmuBflsvz8EjmqVbODhOzDOYGmecT4ql6TVbwnWcJh0"/>
+</div>
+<h3 class="font-bold text-label-md">Blue Ridge</h3>
+<p class="text-xs text-secondary mt-1">Scenic drives &amp; hiking</p>
+</div>
+<div class="bg-surface p-3 rounded-xl border border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<div class="h-24 w-full rounded-lg mb-2 overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Dense evergreen forests surrounding a crystal-clear alpine lake in the Smoky Mountains. The lighting is soft and natural, emphasizing deep greens and cool water tones. A peaceful and lush natural setting designed for a premium travel application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqQH3qAkvlJ_u4hO5OLHyavdJK_RyRYZ_svSgP7pjeSml_r3jTr-9FKK_HBshAgTEazfliq0VWyTScjLoI24CLhqvpuIDH3AIIL8CcBSkoVR5BGW_2iY9UCrpZU7JExQ02q80YpNeVQQx0jsMaZOfXU7zZTGwU3amfQVMSHwnqELuT-I8WDQs5vUt6plu4AOe-wKlHYf64yaygzCkbT6Ewqzwjq9yPwIVYqYtIx_QDaTuPdbMSKm0OgIAaZsYZnBts1eyTMK6_yS8"/>
+</div>
+<h3 class="font-bold text-label-md">The Smokies</h3>
+<p class="text-xs text-secondary mt-1">Wildlife &amp; deep woods</p>
+</div>
+<div class="bg-surface p-3 rounded-xl border border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<div class="h-24 w-full rounded-lg mb-2 overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Charming mountain resort village nestled at the base of snowy peaks. Cozy wooden cabins with warm lights glowing from windows during a soft twilight. Minimalist winter aesthetic with high-contrast whites and warm oranges." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYWjbyFLr0-i1gsbJoRsYWl4Sk2fNnHJ9Is12-NyvJqHzf_2N1V0IRXaK5X_GRcggS7LmNoAeesFBhQBoa3R4gWeHH0nyli1FGgEbfS9uWbD2tLheE3aBAjA-g6mBrM-5J30xEXe5AsYvooRF0JQEQC-WU5Z4EjU4gDcuCpxmfzfMuMj1rYK7MBMx2_PLGPW-GHO22adtCfiEYg7WykHFMtgL-gAq2FSbiUcP50FO22VLRXmyr6k7U_9HdpdHHOZt4qQGouZ6Yxss"/>
+</div>
+<h3 class="font-bold text-label-md">Pine Peak</h3>
+<p class="text-xs text-secondary mt-1">Luxury resorts &amp; spa</p>
+</div>
+</div>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex flex-col items-end gap-1">
+<div class="user-bubble px-md py-sm max-w-[85%] text-body-md shadow-sm">
+                    The Smokies sounds great. Check the weather for Saturday?
+                </div>
+<span class="text-label-sm text-outline px-2">10:08 AM</span>
+</div>
+<!-- Typing Indicator -->
+<div class="flex items-center gap-2 px-2 py-2">
+<div class="ai-bubble px-4 py-3 flex gap-1 items-center">
+<div class="w-1.5 h-1.5 bg-outline rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+<div class="w-1.5 h-1.5 bg-outline rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+<div class="w-1.5 h-1.5 bg-outline rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Controls Area -->
+<div class="fixed bottom-16 left-0 w-full z-40 bg-surface-container-lowest/80 backdrop-blur-md pb-4">
+<!-- Quick Reply Chips -->
+<div class="flex overflow-x-auto gap-2 px-margin-mobile py-3 no-scrollbar">
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant bg-surface text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                Tell me a joke
+            </button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant bg-surface text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                Check weather
+            </button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant bg-surface text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                Set reminder
+            </button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant bg-surface text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors">
+                Book a hotel
+            </button>
+</div>
+<!-- Input Bar -->
+<div class="px-margin-mobile pb-2">
+<div class="bg-surface rounded-full border border-outline-variant shadow-sm flex items-center p-1 pl-4 h-14 max-w-3xl mx-auto focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-body-md px-2 placeholder-outline" placeholder="Type a message..." type="text"/>
+<button class="bg-primary text-white p-2.5 rounded-full flex items-center justify-center hover:bg-primary-container transition-colors ml-1 active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center pt-2 pb-safe px-gutter bg-surface-container-lowest border-t border-outline-variant shadow-lg rounded-t-xl h-16">
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-95 active:scale-90 transition-transform duration-150 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="chat" style="font-variation-settings: 'FILL' 1;">chat</span>
+<span class="text-label-sm font-label-sm">Chat</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 scale-95 active:scale-90 transition-transform duration-150 cursor-pointer hover:bg-surface-container-high rounded-full">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="text-label-sm font-label-sm">History</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 scale-95 active:scale-90 transition-transform duration-150 cursor-pointer hover:bg-surface-container-high rounded-full">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</div>
+</nav>
+<script>
+        // Simple micro-interaction for chips
+        document.querySelectorAll('button.whitespace-nowrap').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.add('bg-primary', 'text-white', 'border-primary');
+                setTimeout(() => {
+                    this.parentElement.style.opacity = '0';
+                    this.parentElement.style.pointerEvents = 'none';
+                    this.parentElement.style.transition = 'opacity 0.3s ease-out';
+                }, 200);
+            });
+        });
+
+        // Ensure chat stays scrolled to bottom on initial load
+        const chatMain = document.querySelector('main');
+        chatMain.scrollTop = chatMain.scrollHeight;
+    </script>
+</body></html>
