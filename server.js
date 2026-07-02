@@ -318,6 +318,48 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
     res.json({ message: 'Upload and parsing complete.', results });
 });
 
+// API: Parse File Temporarily (does not add to persistent knowledge base)
+app.post('/api/parse-temp', upload.single('file'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded.' });
+    }
+
+    const filename = req.file.filename;
+    const filepath = path.join(UPLOADS_DIR, filename);
+    const ext = path.extname(filename).toLowerCase();
+
+    console.log(`Parsing temp file: ${filename} (${ext})`);
+
+    try {
+        let text = '';
+        if (ext === '.txt' || ext === '.md' || ext === '.json') {
+            text = fs.readFileSync(filepath, 'utf8');
+        } else if (ext === '.docx') {
+            text = await parseWordFile(filepath);
+        } else if (ext === '.xlsx' || ext === '.xls' || ext === '.csv') {
+            text = parseExcelFile(filepath);
+        } else if (ext === '.pptx') {
+            text = await parseOfficeFile(filepath);
+        } else {
+            text = await parseOfficeFile(filepath);
+        }
+
+        // Clean up uploaded file immediately
+        if (fs.existsSync(filepath)) {
+            fs.unlinkSync(filepath);
+        }
+
+        res.json({ filename: req.file.originalname, text });
+    } catch (err) {
+        console.error(`Failed to parse temp file ${filename}:`, err);
+        // Clean up on error
+        if (fs.existsSync(filepath)) {
+            fs.unlinkSync(filepath);
+        }
+        res.status(500).json({ error: 'Failed to parse file: ' + err.message });
+    }
+});
+
 // API: Delete File
 app.delete('/api/files/:filename', (req, res) => {
     const filename = req.params.filename;
@@ -387,7 +429,7 @@ app.delete('/api/history/:id', (req, res) => {
 
 // API: Chat Query
 app.post('/api/chat', async (req, res) => {
-    const { message, chatId } = req.body;
+    const { message, chatId, attachments } = req.body;
     if (!message) {
         return res.status(400).json({ error: 'Message is required.' });
     }
@@ -398,7 +440,19 @@ app.post('/api/chat', async (req, res) => {
     }
 
     // Retrieve context from knowledge base
-    const { context, citations } = searchDocuments(message);
+    let { context, citations } = searchDocuments(message);
+
+    // Incorporate temporary attachments sent with this specific message
+    let finalCitations = [...citations];
+    if (attachments && attachments.length > 0) {
+        context += `\n--- Temporary Question Attachments ---\n`;
+        attachments.forEach(att => {
+            context += `[File: ${att.filename}]\n${att.text}\n\n`;
+            if (!finalCitations.includes(att.filename)) {
+                finalCitations.push(att.filename);
+            }
+        });
+    }
 
     // Get chat session from history for context if available
     let conversationContext = '';
@@ -411,11 +465,11 @@ app.post('/api/chat', async (req, res) => {
         }
     }
 
-    // Build API Prompt
-    const systemInstruction = `You are Nova (v4.2), a friendly and precise AI Assistant. Your goal is to answer the user's questions based on the provided document context.
+    // Build API Prompt (Strictly no external knowledge)
+    const systemInstruction = `You are Nova (v4.2), a friendly and precise AI Assistant. Your goal is to answer the user's questions based ONLY on the provided DOCUMENT CONTEXT.
 - Keep your answers highly accurate, professional, and directly related to the documents.
-- If the answer can be found in the documents, summarize it clearly and provide citations.
-- If the answer is not in the documents, state clearly: "I couldn't find specific information in the uploaded documents, but based on general knowledge..." and then answer.
+- Answer the user's questions ONLY based on the provided DOCUMENT CONTEXT. If the answer cannot be found in the provided DOCUMENT CONTEXT, state clearly and politely: "I cannot find the answer in the uploaded documents."
+- Under no circumstances should you use any external, general, or training data to synthesize answers if it is not supported by the document context.
 - Always include a list of cited filenames at the very end of your response under a "Sources:" heading if you retrieved information from them. Format it as:
   
   Sources:
@@ -469,7 +523,7 @@ Response:`;
             const replyText = data.candidates[0].content.parts[0].text;
             res.json({
                 response: replyText,
-                citations: citations
+                citations: finalCitations
             });
         } else {
             throw new Error('Unexpected Gemini API response structure: ' + JSON.stringify(data));

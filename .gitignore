@@ -5,3 +5,6 @@ data/config.json
 data/chats.json
 .env
 .DS_Store
+
+.vercel
+.env*

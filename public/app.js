@@ -5,6 +5,7 @@ let currentMessages = [];
 let chatHistory = [];
 let repositoryFiles = [];
 let hasApiKey = false;
+let chatAttachments = []; // Temporary files attached to the current query
 
 // UI Elements
 const welcomeView = document.getElementById('welcome-view');
@@ -26,6 +27,7 @@ const repoStatsText = document.getElementById('repository-stats');
 const apiKeyInput = document.getElementById('api-key-input');
 const apiKeyStatusText = document.getElementById('api-key-status');
 const uploadStatusText = document.getElementById('upload-status');
+const attachmentsPreviewContainer = document.getElementById('attachments-preview-container');
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
@@ -265,14 +267,67 @@ function triggerFilePicker() {
     document.getElementById('chat-file-picker').click();
 }
 
+function renderAttachmentsPreview() {
+    if (chatAttachments.length === 0) {
+        attachmentsPreviewContainer.classList.add('hidden');
+        attachmentsPreviewContainer.innerHTML = '';
+        return;
+    }
+    
+    attachmentsPreviewContainer.classList.remove('hidden');
+    attachmentsPreviewContainer.innerHTML = chatAttachments.map((file, index) => `
+        <div class="flex items-center gap-1 bg-surface px-2.5 py-1 rounded-full border border-outline-variant/60 text-label-sm shadow-sm">
+            <span class="material-symbols-outlined text-[14px]">attachment</span>
+            <span class="truncate max-w-[120px] font-semibold text-on-surface">${file.filename}</span>
+            <button onclick="removeAttachment(${index})" class="text-outline hover:text-red-500 font-bold ml-1 flex items-center justify-center hover:scale-105 transition-transform" title="Remove attachment">
+                <span class="material-symbols-outlined text-[14px]">close</span>
+            </button>
+        </div>
+    `).join('');
+}
+
+function removeAttachment(index) {
+    chatAttachments.splice(index, 1);
+    renderAttachmentsPreview();
+}
+
 async function handleFileChange(event) {
     const files = event.target.files;
     if (files.length === 0) return;
-    await uploadFiles(files);
     
-    // Show dynamic upload completion bubble in chat
-    const fileNames = Array.from(files).map(f => f.name).join(', ');
-    appendSystemMessage(`Successfully uploaded and indexed document(s): <strong>${fileNames}</strong>. Nova can now search these files for answers.`);
+    uploadStatusText.classList.remove('hidden');
+    uploadStatusText.textContent = 'Parsing attachment...';
+    
+    try {
+        for (const file of files) {
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const response = await fetch('/api/parse-temp', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) throw new Error('Failed to parse file: ' + file.name);
+            
+            const result = await response.json();
+            console.log('Parsed temp file:', result);
+            
+            chatAttachments.push({
+                filename: result.filename,
+                text: result.text
+            });
+        }
+        
+        renderAttachmentsPreview();
+    } catch (err) {
+        console.error('Error parsing temp files:', err);
+        alert('Failed to parse file. ' + err.message);
+    } finally {
+        uploadStatusText.classList.add('hidden');
+        uploadStatusText.textContent = 'Uploading and parsing file...';
+        event.target.value = '';
+    }
 }
 
 async function uploadFiles(files) {
@@ -350,9 +405,16 @@ function appendMessage(role, content, citations = []) {
     
     let bubbleHtml = '';
     if (isUser) {
+        let attachmentNotice = '';
+        if (chatAttachments && chatAttachments.length > 0) {
+            attachmentNotice = `<div class="mt-1 pt-1 border-t border-white/20 text-[11px] font-semibold opacity-90 flex flex-wrap gap-1">
+                ${chatAttachments.map(att => `<span class="bg-white/20 px-1.5 py-0.5 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[10px]" style="font-size:10px;">attachment</span> ${att.filename}</span>`).join('')}
+            </div>`;
+        }
         bubbleHtml = `
             <div class="user-bubble px-md py-sm max-w-[85%] text-body-md shadow-sm">
                 ${escapeHTML(content)}
+                ${attachmentNotice}
             </div>
             <span class="text-label-sm text-outline px-2">${timeStr}</span>
         `;
@@ -433,8 +495,13 @@ async function sendMessage() {
     // Clear input
     chatInput.value = '';
     
-    // Append user message
+    // Append user message (will render with active chatAttachments)
     appendMessage('user', text);
+    
+    // Capture and clear active attachments immediately for the next message
+    const attachmentsToSend = [...chatAttachments];
+    chatAttachments = [];
+    renderAttachmentsPreview();
     
     // Check key
     if (!hasApiKey) {
@@ -455,7 +522,8 @@ async function sendMessage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 chatId: currentChatId,
-                message: text
+                message: text,
+                attachments: attachmentsToSend
             })
         });
         
