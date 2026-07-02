@@ -25,6 +25,7 @@ const UPLOADS_DIR = path.join(baseWritableDir, 'uploads');
 const CACHE_DIR = path.join(baseWritableDir, 'cache');
 const DATA_DIR = path.join(baseWritableDir, 'data');
 const PUBLIC_DIR = path.join(__dirname, 'public');
+const PRELOAD_DIR = path.join(__dirname, 'documents');
 
 [UPLOADS_DIR, CACHE_DIR, DATA_DIR].forEach(dir => {
     if (!fs.existsSync(dir)) {
@@ -33,6 +34,9 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 });
 if (!fs.existsSync(PUBLIC_DIR)) {
     fs.mkdirSync(PUBLIC_DIR, { recursive: true });
+}
+if (!fs.existsSync(PRELOAD_DIR)) {
+    fs.mkdirSync(PRELOAD_DIR, { recursive: true });
 }
 
 // Configure Multer for file uploads
@@ -542,7 +546,37 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
 
+async function preloadDocuments() {
+    console.log(`Checking for preloaded documents in: ${PRELOAD_DIR}`);
+    if (!fs.existsSync(PRELOAD_DIR)) {
+        return;
+    }
+    try {
+        const files = fs.readdirSync(PRELOAD_DIR);
+        console.log(`Found ${files.length} preloaded files to process.`);
+        for (const file of files) {
+            if (file.startsWith('.')) continue; // skip hidden files
+            
+            const srcPath = path.join(PRELOAD_DIR, file);
+            const destPath = path.join(UPLOADS_DIR, file);
+            
+            // Check if file is already copied or if sizes differ
+            if (!fs.existsSync(destPath) || fs.statSync(srcPath).size !== fs.statSync(destPath).size) {
+                console.log(`Copying preloaded file to uploads: ${file}`);
+                fs.copyFileSync(srcPath, destPath);
+            }
+            
+            // Parse and cache
+            await parseAndCacheFile(file);
+        }
+    } catch (err) {
+        console.error('Error preloading documents:', err);
+    }
+}
+
 // Start Server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Server is running at http://localhost:${PORT}`);
+    // Process committed knowledge repository files on startup
+    await preloadDocuments();
 });
